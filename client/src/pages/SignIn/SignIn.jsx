@@ -9,25 +9,32 @@ const SignIn = () => {
     const [password, setPassword] = useState("")
     const [error, setError] = useState(null)
 
+    const removeError = () => {
+        setTimeout(() => {
+            setError("")
+        }, 1000)
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         if (!email && !password) {
             setError("please enter the credentials.")
+            removeError()
             return
         }
 
         if (!validateEmail(email)) {
             setError("please enter a valid email address.")
+            removeError()
             return
         }
 
         if (!password) {
             setError("please enter password.")
+            removeError()
             return
         }
-
-        setError("")
     }
 
     return (
@@ -57,7 +64,7 @@ const SignIn = () => {
                             SignIn
                         </button>
                         <p className='text-sm text-center mt-4'>
-                            Not Registered Yet?{" "}
+                            not registered yet?{" "}
                             <Link
                                 to='/signup'
                                 className='font-medium text-primary underline'
