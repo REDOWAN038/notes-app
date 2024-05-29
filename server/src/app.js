@@ -18,4 +18,18 @@ app.get("/test", (req, res) => {
     })
 })
 
+// handling client error
+app.use((req, res, next) => {
+    createError(404, "route not found")
+    next()
+})
+
+// handling server error
+app.use((err, req, res, next) => {
+    return errorResponse(res, {
+        statusCode: err.status,
+        message: err.message
+    })
+})
+
 module.exports = app
