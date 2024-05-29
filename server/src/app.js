@@ -3,6 +3,11 @@ const morgan = require("morgan")
 const cors = require("cors")
 const app = express()
 
+const userRoutes = require("../routes/userRoutes")
+
+const { errorResponse } = require("../handler/responseHandler")
+
+
 
 // middlewares
 app.use(morgan("dev"))
@@ -11,6 +16,7 @@ app.use(express.urlencoded({ extended: true }))
 app.use(cors({ origin: "*" }))
 
 // routes
+app.use("/api/v1/users", userRoutes)
 
 app.get("/test", (req, res) => {
     res.status(200).json({
