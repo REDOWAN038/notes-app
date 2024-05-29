@@ -2,10 +2,46 @@ import { useState } from "react"
 import Tag from "../Tag/Tag"
 import { MdClose } from "react-icons/md"
 
-const AddEditNotes = ({ onClose }) => {
+const AddEditNotes = ({ data, type, onClose }) => {
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
     const [tags, setTags] = useState([])
+    const [error, setError] = useState(null)
+
+    const handleAddNewNote = async () => {}
+    const handleEditNote = async () => {}
+
+    const removeError = () => {
+        setTimeout(() => {
+            setError("")
+        }, 1000)
+    }
+
+    const handleAddNote = () => {
+        if (!title && !content) {
+            setError("please enter all the fields.")
+            removeError()
+            return
+        }
+
+        if (!title) {
+            setError("please enter title.")
+            removeError()
+            return
+        }
+        if (!content) {
+            setError("please enter content.")
+            removeError()
+            return
+        }
+
+        if (type === "add") {
+            handleAddNewNote()
+        } else {
+            handleEditNote()
+        }
+    }
+
     return (
         <div className='relative'>
             <button
@@ -42,9 +78,13 @@ const AddEditNotes = ({ onClose }) => {
                 <Tag tags={tags} setTags={setTags} />
             </div>
 
+            {error ? (
+                <p className='text-red-500 text-xs pt-4'>{error}</p>
+            ) : null}
+
             <button
                 className='btn-primary font-medium mt-5 p-3'
-                onClick={() => {}}
+                onClick={() => handleAddNote}
             >
                 ADD
             </button>
