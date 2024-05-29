@@ -22,6 +22,22 @@ const validateUserRegistration = [
     // .withMessage("Password must be at least 8 characters, contain a lowercase letter, an uppercase letter, a number, and a special character"),
 ]
 
+// validate user login input
+const validateUserLogin = [
+    body("email")
+        .trim()
+        .notEmpty()
+        .withMessage("Email is required")
+        .isEmail()
+        .withMessage("Emails is not valid"),
+
+    body("password")
+        .trim()
+        .notEmpty()
+        .withMessage("Pasword is required")
+]
+
 module.exports = {
-    validateUserRegistration
+    validateUserRegistration,
+    validateUserLogin
 }

@@ -1,6 +1,7 @@
 const express = require("express")
 const morgan = require("morgan")
 const cors = require("cors")
+const cookieParser = require("cookie-parser")
 const app = express()
 
 const userRoutes = require("../routes/userRoutes")
@@ -10,6 +11,7 @@ const { errorResponse } = require("../handler/responseHandler")
 
 
 // middlewares
+app.use(cookieParser())
 app.use(morgan("dev"))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
