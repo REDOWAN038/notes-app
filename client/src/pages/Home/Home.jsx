@@ -80,6 +80,7 @@ export const Home = () => {
                 <AddEditNotes
                     data={openModal.data}
                     type={openModal.type}
+                    getAllNotes={getAllNotes}
                     onClose={() => {
                         setOpenModal({
                             isShown: false,
