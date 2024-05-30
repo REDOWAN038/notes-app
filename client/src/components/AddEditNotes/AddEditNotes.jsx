@@ -3,15 +3,12 @@ import Tag from "../Tag/Tag"
 import { MdClose } from "react-icons/md"
 import axios from "axios"
 import { message } from "antd"
-import { useNavigate } from "react-router-dom"
 
 const AddEditNotes = ({ data, type, getAllNotes, onClose }) => {
-    const [title, setTitle] = useState("")
-    const [content, setContent] = useState("")
-    const [tags, setTags] = useState([])
+    const [title, setTitle] = useState(data?.title || "")
+    const [content, setContent] = useState(data?.content || "")
+    const [tags, setTags] = useState(data?.tags || [])
     const [error, setError] = useState(null)
-
-    const navigate = useNavigate()
 
     const handleAddNewNote = async () => {
         try {
@@ -36,7 +33,30 @@ const AddEditNotes = ({ data, type, getAllNotes, onClose }) => {
             message.error("something went wrong")
         }
     }
-    const handleEditNote = async () => {}
+
+    const handleEditNote = async () => {
+        try {
+            const res = await axios.put(
+                `${import.meta.env.VITE_SERVER_URL}/api/v1/notes/${data._id}`,
+                {
+                    title,
+                    content,
+                    tags,
+                },
+                {
+                    withCredentials: true,
+                }
+            )
+
+            if (res?.data?.success) {
+                message.success(res?.data?.message)
+                getAllNotes()
+                onClose()
+            }
+        } catch (error) {
+            message.error("something went wrong")
+        }
+    }
 
     const removeError = () => {
         setTimeout(() => {
@@ -113,7 +133,7 @@ const AddEditNotes = ({ data, type, getAllNotes, onClose }) => {
                 className='btn-primary font-medium mt-5 p-3'
                 onClick={() => handleAddNote()}
             >
-                ADD
+                {type === "add" ? "ADD" : "UPDATE"}
             </button>
         </div>
     )

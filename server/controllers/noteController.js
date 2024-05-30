@@ -57,7 +57,7 @@ const handleDeleteNote = async (req, res, next) => {
         await deleteNote(id, req.user._id)
         return successResponse(res, {
             statusCode: 200,
-            message: "notes deleted successfully",
+            message: "note deleted successfully",
         })
     } catch (error) {
         next(error)

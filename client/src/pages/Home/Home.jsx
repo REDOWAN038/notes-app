@@ -14,6 +14,55 @@ export const Home = () => {
         data: null,
     })
 
+    const handleEdit = (noteDetails) => {
+        setOpenModal({ isShown: true, type: "edit", data: noteDetails })
+    }
+
+    const handleDelete = async (id) => {
+        const isConfirmed = window.confirm(
+            "Are you sure you want to delete this image?"
+        )
+
+        if (isConfirmed) {
+            try {
+                const res = await axios.delete(
+                    `${import.meta.env.VITE_SERVER_URL}/api/v1/notes/${id}`,
+                    {
+                        withCredentials: true,
+                    }
+                )
+
+                if (res?.data?.success) {
+                    message.success(res?.data?.message)
+                    getAllNotes()
+                }
+            } catch (error) {
+                message.error("something went wrong")
+            }
+        }
+    }
+
+    const handlePinNote = async (id, value) => {
+        try {
+            const res = await axios.put(
+                `${import.meta.env.VITE_SERVER_URL}/api/v1/notes/${id}`,
+                {
+                    isPinned: !value,
+                },
+                {
+                    withCredentials: true,
+                }
+            )
+
+            if (res?.data?.success) {
+                message.success(res?.data?.message)
+                getAllNotes()
+            }
+        } catch (error) {
+            message.error("something went wrong")
+        }
+    }
+
     const getAllNotes = async () => {
         try {
             const res = await axios.get(
@@ -49,9 +98,11 @@ export const Home = () => {
                             content={note.content}
                             tags={note.tags}
                             isPinned={note.isPinned}
-                            onEdit={() => {}}
-                            onDelete={() => {}}
-                            onPinNote={() => {}}
+                            onEdit={() => handleEdit(note)}
+                            onDelete={() => handleDelete(note._id)}
+                            onPinNote={() =>
+                                handlePinNote(note._id, note.isPinned)
+                            }
                         />
                     ))}
                 </div>
