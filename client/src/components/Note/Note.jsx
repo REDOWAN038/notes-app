@@ -1,4 +1,5 @@
 import { MdCreate, MdDelete, MdOutlinePushPin } from "react-icons/md"
+import { formatDateWithOrdinal } from "../../utils/helper"
 const Note = ({
     title,
     date,
@@ -14,7 +15,9 @@ const Note = ({
             <div className='flex items-center justify-between'>
                 <div>
                     <h6 className='text-sm font-medium'>{title}</h6>
-                    <span className='text-xs text-slate-500'>{date}</span>
+                    <span className='text-xs text-slate-500'>
+                        {formatDateWithOrdinal(date)}
+                    </span>
                 </div>
 
                 <MdOutlinePushPin
@@ -30,7 +33,9 @@ const Note = ({
             </p>
 
             <div className='flex items-center justify-between mt-2'>
-                <div className='text-xs text-slate-500'>{tags}</div>
+                <div className='text-xs text-slate-500'>
+                    {tags.map((item) => `#${item}`)}
+                </div>
                 <div className='flex items-center gap-2'>
                     <MdCreate
                         className='icon-btn hover:text-green-600'

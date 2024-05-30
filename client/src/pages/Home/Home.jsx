@@ -2,28 +2,58 @@ import { MdAdd } from "react-icons/md"
 import Modal from "react-modal"
 import Note from "../../components/Note/Note"
 import AddEditNotes from "../../components/AddEditNotes/AddEditNotes"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import axios from "axios"
+import { message } from "antd"
 
 export const Home = () => {
+    const [allNotes, setAllNotes] = useState([])
     const [openModal, setOpenModal] = useState({
         isShown: false,
         type: "add",
         data: null,
     })
+
+    const getAllNotes = async () => {
+        try {
+            const res = await axios.get(
+                `${import.meta.env.VITE_SERVER_URL}/api/v1/notes`,
+                {
+                    withCredentials: true,
+                }
+            )
+
+            if (res?.data?.success) {
+                setAllNotes(res?.data?.payload?.notes)
+            }
+        } catch (error) {
+            message.error("check your internet connection.")
+        }
+    }
+
+    useEffect(() => {
+        getAllNotes()
+        return () => {}
+    }, [])
+
     return (
         <>
             <div className='container mx-auto'>
                 <div className='grid grid-cols-3 gap-4 mt-8'>
-                    <Note
-                        title='meeting on 7th june'
-                        date='29th may, 2024'
-                        content='Et et gubergren erat no amet justo ipsum et dolore, dolores et dolore eirmod voluptua magna. Gubergren duo voluptua gubergren diam diam eos consetetur erat, erat ea aliquyam lorem vero, et et no et dolor no et sed. Invidunt dolor aliquyam amet invidunt eirmod takimata sit. Dolor sea sed eos diam voluptua. Eirmod dolores dolor tempor sadipscing. Vero voluptua elitr nonumy at. Diam est dolores accusam invidunt, sit dolor takimata.'
-                        tags='#Meeting'
-                        isPinned={true}
-                        onEdit={() => {}}
-                        onDelete={() => {}}
-                        onPinNote={() => {}}
-                    />
+                    {allNotes.map((note) => (
+                        // eslint-disable-next-line react/jsx-key
+                        <Note
+                            key={note._id}
+                            title={note.title}
+                            date={note.createdAt}
+                            content={note.content}
+                            tags={note.tags}
+                            isPinned={note.isPinned}
+                            onEdit={() => {}}
+                            onDelete={() => {}}
+                            onPinNote={() => {}}
+                        />
+                    ))}
                 </div>
             </div>
 
