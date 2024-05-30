@@ -1,13 +1,17 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { useState } from "react"
 import { validateEmail } from "../../utils/helper"
 import Password from "../../components/Input/Password"
+import axios from "axios"
+import { message } from "antd"
 
 const SignUp = () => {
     const [email, setEmail] = useState("")
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState(null)
+
+    const navigate = useNavigate()
 
     const removeError = () => {
         setTimeout(() => {
@@ -40,6 +44,34 @@ const SignUp = () => {
             setError("please enter password.")
             removeError()
             return
+        }
+
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_SERVER_URL}/api/v1/users/register`,
+                {
+                    name,
+                    email,
+                    password,
+                },
+                {
+                    withCredentials: true,
+                }
+            )
+
+            if (res?.data?.success) {
+                message.info(res?.data?.message)
+                navigate("/signin")
+            }
+        } catch (error) {
+            if (error?.response?.status === 409) {
+                message.info(error?.response?.data?.message)
+                navigate("/signin")
+            } else if (error?.response?.status === 500) {
+                message.error(error?.response?.data?.message)
+            } else {
+                message.error("check your network connection")
+            }
         }
     }
 
