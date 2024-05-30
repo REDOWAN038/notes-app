@@ -1,10 +1,12 @@
 const express = require("express")
 const morgan = require("morgan")
+const createError = require("http-errors")
 const cors = require("cors")
 const cookieParser = require("cookie-parser")
 const app = express()
 
 const userRoutes = require("../routes/userRoutes")
+const noteRoutes = require("../routes/noteRoutes")
 
 const { errorResponse } = require("../handler/responseHandler")
 
@@ -19,6 +21,7 @@ app.use(cors({ origin: "*" }))
 
 // routes
 app.use("/api/v1/users", userRoutes)
+app.use("/api/v1/notes", noteRoutes)
 
 app.get("/test", (req, res) => {
     res.status(200).json({

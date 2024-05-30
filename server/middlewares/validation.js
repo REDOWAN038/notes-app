@@ -34,10 +34,24 @@ const validateUserLogin = [
     body("password")
         .trim()
         .notEmpty()
+
         .withMessage("Pasword is required")
+]
+// validate note
+const validateNote = [
+    body("title")
+        .trim()
+        .notEmpty()
+        .withMessage("Title is required"),
+
+    body("content")
+        .trim()
+        .notEmpty()
+        .withMessage("Content is required")
 ]
 
 module.exports = {
     validateUserRegistration,
-    validateUserLogin
+    validateUserLogin,
+    validateNote
 }
