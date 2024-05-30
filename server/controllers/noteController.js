@@ -1,5 +1,5 @@
 const { successResponse } = require("../handler/responseHandler")
-const { addNote, editNote } = require("../services/noteService")
+const { addNote, editNote, getAllNotes } = require("../services/noteService")
 
 // add note
 const handleAddNote = async (req, res, next) => {
@@ -34,7 +34,24 @@ const handleEditNote = async (req, res, next) => {
     }
 }
 
+// get all notes
+const handleGetAllNotes = async (req, res, next) => {
+    try {
+        const notes = await getAllNotes(req.user._id)
+        return successResponse(res, {
+            statusCode: 200,
+            message: "notes returned successfully",
+            payload: {
+                notes
+            }
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     handleAddNote,
-    handleEditNote
+    handleEditNote,
+    handleGetAllNotes
 }

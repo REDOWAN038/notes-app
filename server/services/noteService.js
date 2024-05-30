@@ -61,7 +61,27 @@ const editNote = async (req) => {
     }
 }
 
+// get all notes
+const getAllNotes = async (userId) => {
+    try {
+        const user = await userModel.findById(userId)
+
+        if (!user) {
+            throw createError(404, "user not found")
+        }
+
+        const notes = await noteModel.find({
+            createdBy: userId
+        }).sort({ isPinned: -1 })
+
+        return notes
+    } catch (error) {
+        throw error
+    }
+}
+
 module.exports = {
     addNote,
-    editNote
+    editNote,
+    getAllNotes
 }
