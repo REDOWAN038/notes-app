@@ -80,8 +80,30 @@ const getAllNotes = async (userId) => {
     }
 }
 
+// delete note
+const deleteNote = async (id, userId) => {
+    try {
+        const note = await noteModel.findOne({
+            _id: id,
+            createdBy: userId
+        })
+
+        if (!note) {
+            throw createError(404, "no note found")
+        }
+
+        await noteModel.deleteOne({
+            _id: id,
+            createdBy: userId
+        })
+    } catch (error) {
+        throw error
+    }
+}
+
 module.exports = {
     addNote,
     editNote,
-    getAllNotes
+    getAllNotes,
+    deleteNote
 }

@@ -1,5 +1,5 @@
 const { successResponse } = require("../handler/responseHandler")
-const { addNote, editNote, getAllNotes } = require("../services/noteService")
+const { addNote, editNote, getAllNotes, deleteNote } = require("../services/noteService")
 
 // add note
 const handleAddNote = async (req, res, next) => {
@@ -50,8 +50,23 @@ const handleGetAllNotes = async (req, res, next) => {
     }
 }
 
+// delete note
+const handleDeleteNote = async (req, res, next) => {
+    try {
+        const { id } = req.params
+        await deleteNote(id, req.user._id)
+        return successResponse(res, {
+            statusCode: 200,
+            message: "notes deleted successfully",
+        })
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     handleAddNote,
     handleEditNote,
-    handleGetAllNotes
+    handleGetAllNotes,
+    handleDeleteNote
 }
