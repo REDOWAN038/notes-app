@@ -1,14 +1,35 @@
 import { useNavigate } from "react-router-dom"
+import { message } from "antd"
 import Profile from "../Profile/Profile"
 import Search from "../Search/Search"
-import { useState } from "react"
+import { useContext, useState } from "react"
+import axios from "axios"
+import AuthContext from "../../context/authContext"
 
 const Navbar = () => {
     const [searchQuery, setSearchQuery] = useState("")
+    const { user, setLoggedUser } = useContext(AuthContext)
     const navigate = useNavigate()
 
-    const handleLogout = () => {
-        navigate("/signin")
+    const handleLogout = async () => {
+        try {
+            const response = await axios.post(
+                `${import.meta.env.VITE_SERVER_URL}/api/v1/users/logout`,
+                {},
+                { withCredentials: true }
+            )
+
+            console.log("res ", response)
+
+            if (response?.data?.success) {
+                localStorage.removeItem("user")
+                setLoggedUser(null)
+                message.success(response?.data?.message)
+                navigate("/signin")
+            }
+        } catch (error) {
+            message.error("something went wrong. try again!!!")
+        }
     }
 
     const handleSearch = () => {}
@@ -26,7 +47,10 @@ const Navbar = () => {
                 handleSearch={handleSearch}
                 onClearSearch={onClearSearch}
             />
-            <Profile handleLogout={handleLogout} />
+
+            <div className='flex items-center gap-3'>
+                {user ? <Profile handleLogout={handleLogout} /> : null}
+            </div>
         </div>
     )
 }

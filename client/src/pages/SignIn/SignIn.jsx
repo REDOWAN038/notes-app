@@ -1,12 +1,18 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
+import { message } from "antd"
 import Password from "../../components/Input/Password"
-import { useState } from "react"
+import { useContext, useState } from "react"
 import { validateEmail } from "../../utils/helper"
+import AuthContext from "../../context/authContext"
 
 const SignIn = () => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState(null)
+
+    const { setLoggedUser } = useContext(AuthContext)
+    const navigate = useNavigate()
 
     const removeError = () => {
         setTimeout(() => {
@@ -33,6 +39,36 @@ const SignIn = () => {
             setError("please enter password.")
             removeError()
             return
+        }
+
+        try {
+            const res = await axios.post(
+                `${import.meta.env.VITE_SERVER_URL}/api/v1/users/login`,
+                {
+                    email,
+                    password,
+                },
+                {
+                    withCredentials: true,
+                }
+            )
+
+            if (res?.data?.success) {
+                setLoggedUser(res?.data?.payload)
+                localStorage.setItem("user", JSON.stringify(res?.data?.payload))
+
+                message.success(res?.data?.message)
+                navigate("/dashboard")
+            }
+        } catch (error) {
+            if (error?.response?.status === 404) {
+                message.error(error?.response?.data?.message)
+                navigate("/users/signup")
+            } else if (error?.response?.status === 401) {
+                message.error(error?.response?.data?.message)
+            } else {
+                message.error("check your network connection")
+            }
         }
     }
 

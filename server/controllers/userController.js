@@ -21,8 +21,8 @@ const handleLogin = async (req, res, next) => {
         const { userWithOutPassword, accessToken } = await userLogin(email, password)
         res.cookie("accessToken", accessToken, {
             maxAge: 60 * 60 * 1000,  // expires in 60 minutes
-            httpOnly: true,
-            sameSite: 'none',
+            // httpOnly: true,
+            // sameSite: 'none',
         })
         return successResponse(res, {
             statusCode: 200,
