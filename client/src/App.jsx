@@ -4,6 +4,7 @@ import SignIn from "./pages/SignIn/SignIn"
 import SignUp from "./pages/SignUp/SignUp"
 import Navbar from "./components/Navbar/Navbar"
 import ProtectedRoute from "./Protection/ProtectedRoute"
+import Empty from "./components/Empty/Empty"
 
 const App = () => {
     return (
@@ -33,6 +34,10 @@ const App = () => {
                             <SignUp />
                         </ProtectedRoute>
                     }
+                />
+                <Route
+                    path='*'
+                    element={<Empty message={"404. no page found"} />}
                 />
             </Routes>
         </Router>

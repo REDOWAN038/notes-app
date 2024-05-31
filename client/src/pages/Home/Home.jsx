@@ -5,6 +5,7 @@ import AddEditNotes from "../../components/AddEditNotes/AddEditNotes"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { message } from "antd"
+import Empty from "../../components/Empty/Empty"
 
 export const Home = () => {
     const [allNotes, setAllNotes] = useState([])
@@ -88,24 +89,32 @@ export const Home = () => {
     return (
         <>
             <div className='container mx-auto'>
-                <div className='grid grid-cols-3 gap-4 mt-8'>
-                    {allNotes.map((note) => (
-                        // eslint-disable-next-line react/jsx-key
-                        <Note
-                            key={note._id}
-                            title={note.title}
-                            date={note.createdAt}
-                            content={note.content}
-                            tags={note.tags}
-                            isPinned={note.isPinned}
-                            onEdit={() => handleEdit(note)}
-                            onDelete={() => handleDelete(note._id)}
-                            onPinNote={() =>
-                                handlePinNote(note._id, note.isPinned)
-                            }
-                        />
-                    ))}
-                </div>
+                {allNotes.length > 0 ? (
+                    <div className='grid grid-cols-3 gap-4 mt-8'>
+                        {allNotes.map((note) => (
+                            // eslint-disable-next-line react/jsx-key
+                            <Note
+                                key={note._id}
+                                title={note.title}
+                                date={note.createdAt}
+                                content={note.content}
+                                tags={note.tags}
+                                isPinned={note.isPinned}
+                                onEdit={() => handleEdit(note)}
+                                onDelete={() => handleDelete(note._id)}
+                                onPinNote={() =>
+                                    handlePinNote(note._id, note.isPinned)
+                                }
+                            />
+                        ))}
+                    </div>
+                ) : (
+                    <Empty
+                        message={
+                            "no notes to display. click + icon to add a new note"
+                        }
+                    />
+                )}
             </div>
 
             <button
